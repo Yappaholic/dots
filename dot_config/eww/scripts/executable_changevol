@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ "$1" == "up" ]; then
+	pactl set-sink-volume @DEFAULT_SINK@ +5%
+else
+	pactl set-sink-volume @DEFAULT_SINK@ -5%
+fi
+	

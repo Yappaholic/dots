@@ -1,0 +1,118 @@
+(include "./time.yuck")
+
+(deflisten current-json :initial "[]"
+  `ristate -t | stdbuf -o0 sed '/{"tags":{}}/d; s/├─┤ │/[]/g; s/│ ├─┤/[]/g; s/│   │/[1]/g; s/│ /[/; s/ │/]/;'`
+)
+
+(deflisten occupied-tags :initial "1" 
+    `ristate -vt | stdbuf -o0 sed '/{"viewstag":{}}/d'`
+)
+
+(defpoll vol :interval "1s"
+	"pactl get-sink-volume @DEFAULT_SINK@"
+)
+
+(defwidget separator []
+  (label :text "|" :class "separator")
+)
+
+(defwidget volume []
+  (eventbox :onscroll "bash scripts/changevol {}"
+            :onclick "pactl set-sink-mute @DEFAULT_AUDIO_SINK@ toggle"
+						:timeout "200ms"
+    	"VOL: ${search(vol, '..\%')[0]}"
+  )
+)
+
+(defwidget disk []
+	(label :text "DISK: ${round((EWW_DISK["/"].free / 1000000000), 0)} GB")
+)
+
+(defwidget cpu []
+  (label :text "CPU: ${round(EWW_CPU.avg, 0)} %")
+)
+
+(defwidget memory []
+ (label :text "MEM: ${round((EWW_RAM.used_mem / 1000000000), 2)} GB" 
+				:truncated true
+				:show-truncated false)
+)
+
+(defwidget tag [id symbol]
+    (eventbox
+        :onclick `riverctl set-focused-tags \`echo "2^${id - 1}" | bc -l\``
+        ( box 
+		:class `tag ${id == current-json["tags"]["SamsungElectricCompany"][0] ? "active-tag" : matches(occupied-tags["viewstag"]["SamsungElectricCompany"], id) == true ? "occupied-tag" : "empty-tag"}` 
+          {symbol}
+        )
+    )
+)
+
+(defvar tags "[1, 2, 3, 4, 5, 6, 7, 8, 9]")
+(defvar tagSymbols `["1", "2", "3", "4", "5", "6", "7", "8", "9"]`)
+(defwidget riverTags []
+  (box
+     :orientation "h"
+     :space-evenly false
+     :halign "start"
+     :spacing 3
+     (for tagnum in tags
+          (tag :id tagnum
+               :symbol `${tagSymbols[tagnum - 1]}`)
+        )
+))
+
+(defwidget sidestuff []
+		(box
+			 :class "sidestuff"
+			 :orientation "h"
+			 :space-evenly false
+			 :halign "end"
+		 (cpu)
+		 (separator)
+		 (disk)
+		 (separator)
+		 (memory)
+		 (separator)
+		 (volume)
+		 (separator)
+		 (clock)
+		 (systray
+			:class "tray"
+		  :prepend-new true
+      :icon-size 20
+      :space-evenly false
+      :spacing 2)
+))
+
+(defwidget space []
+	(box :orientation "h"
+			 :class "space"
+			 :label ""))
+
+(defwidget metric [label value onchange]
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+(defwindow bar []
+		:monitor "SyncMaster"
+		:geometry (geometry :x "0%"
+												:y "0%"
+												:width "100%"
+												:height "10px"
+												:anchor "top center")
+		:exclusive true
+		:stacking "fg"
+(centerbox :orientation "h"
+(riverTags)
+(space)
+(sidestuff))
+)
+

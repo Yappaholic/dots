@@ -1,0 +1,9 @@
+[package]
+name = "clock"
+version = "0.1.0"
+edition = "2021"
+
+[profile.dev]
+lto = "thin"
+opt-level=3
+debug = 0

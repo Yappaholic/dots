@@ -1,0 +1,6 @@
+#!/bin/bash
+swww-daemon &
+eww daemon
+eww open bar
+gammastep &
+swww img /home/savvy/Downloads/6.png 

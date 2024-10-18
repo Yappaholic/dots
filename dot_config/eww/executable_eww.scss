@@ -1,0 +1,67 @@
+* {
+  all: unset;
+  font-size: 14px;
+}
+
+.bar {
+  background-color: #282828;
+}
+
+.sidestuff {
+  color: #ebdbb2;
+}
+
+.metric scale trough highlight {
+  all: unset;
+  background-color: #D35D6E;
+  color: #000000;
+  border-radius: 10px;
+}
+
+.metric scale trough {
+  all: unset;
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 3px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.label-ram {
+  font-size: large;
+}
+
+.tag.empty-tag {
+  opacity: 0;
+}
+.tag.active-tag {
+  color: #1D2021;
+  background-color: #689D68;
+}
+.tag.occupied-tag {
+  background-color: #282828;
+  color: #966F23;
+}
+.tag {
+  padding: 2px 24px;
+  margin: 0px 0px;
+}
+.workspaces {
+  margin-right:0;
+}
+.space {
+  min-width: 700px;
+}
+
+.tray {
+  padding: 4px;
+  color: white;
+}
+.time {
+  padding: 0px;
+  margin: 0px;
+}
+.separator {
+  margin: 0px 6px;
+}

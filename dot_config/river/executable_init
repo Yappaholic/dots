@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+exec /home/savvy/.config/river/Main
