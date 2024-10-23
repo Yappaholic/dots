@@ -33,5 +33,21 @@ return {
       desc = "Diagnostics (Trouble)",
     },
   },
+},
+{
+  'stevearc/oil.nvim',
+  ---@module 'oil'
+  ---@type oil.SetupOpts
+  opts = {},
+  -- Optional dependencies
+  dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+},
+{"folke/todo-comments.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+},
+{
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    config = true
+},
 }
- }

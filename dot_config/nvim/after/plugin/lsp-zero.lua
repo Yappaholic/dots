@@ -43,6 +43,8 @@ require('lspconfig').gopls.setup({})
 require('lspconfig').tailwindcss.setup({})
 require('lspconfig').ts_ls.setup({})
 require('lspconfig').cmake.setup({})
+vim.g.zig_fmt_parse_errors = 0
+require('lspconfig').zls.setup({})
 
 local cmp = require('cmp')
 local cmp_action = require('lsp-zero').cmp_action()
