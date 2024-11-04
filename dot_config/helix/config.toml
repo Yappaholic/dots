@@ -1,0 +1,23 @@
+theme = "kanagawa"
+
+[editor]
+line-number = "relative"
+mouse = false
+completion-timeout = 5
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "block"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+left = ["mode"]
+center = ["file-name"]
+right = ["diagnostics", "position", "file-type"]
+separator = "│"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
