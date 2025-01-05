@@ -3,62 +3,45 @@
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
 
+;; Meow keybindings
+(load "~/.emacs.d/meow.el")
+;; Harpoon
+(load "~/.emacs.d/harpoon.el")
 ;; Get Evil
-(unless (package-installed-p 'evil)
-  (package-install 'evil))
-(require 'evil)
-(evil-mode 1)
-(evil-set-leader 'motion (kbd "SPC"))
+;; (unless (package-installed-p 'evil)
+;;   (package-install 'evil))
+;; (require 'evil)
+;; (evil-mode 0)
+;; (evil-set-leader 'motion (kbd "SPC"))
 
 ;; Get markdown
-(unless (package-installed-p 'markdown-mode)
-  (package-install 'markdown-mode))
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
          ("C-c C-e" . markdown-do)))
-
 ;; Get dirvish
-(unless (package-installed-p 'dirvish)
-  (package-install 'dirvish))
 (dirvish-override-dired-mode)
 (defun me/pv ()
   (interactive)
   (dired "."))
-(evil-define-key 'normal 'global (kbd "<leader>pv") 'me/pv)
+(global-set-key (kbd "C-c f") 'me/pv)
 
-(defun me/pc ()
-  (interactive)
-  (dired "/sudo::/etc"))
-(evil-define-key 'normal 'global (kbd "<leader>pc") 'me/pc)
-
-(defun me/cc ()
-  (interactive)
-  (compile))
-(evil-define-key 'normal 'global (kbd "<leader>cc") 'me/cc)
-
-;; Get Doom-themes
-;; (unless (package-installed-p 'doom-themes)
-;;   (package-install 'doom-themes))
-;; (use-package doom-themes
-;;   :ensure t
-;;   :config
-;;   (setq doom-themes-enable-bold t
-;; 	doom-themes-enable-italic t)
-;;   (load-theme 'doom-solarized-dark-high-contrast t))
+;; (defun me/pc ()
+;;   (interactive)
+;;   (dired "/sudo::/etc"))
+;(evil-define-key 'normal 'global (kbd "<leader>pc") 'me/pc)
 
 (use-package kanagawa-themes
-  :ensure t
-  :config
-  (load-theme 'kanagawa-dragon t))
+   :ensure t
+   :config
+   (load-theme 'kanagawa-dragon t))
+;;(load-theme 'gruber-darker t)
+
+
 ;; Get org-modern
 (with-eval-after-load 'org (global-org-modern-mode))
-
-;; Auto TreeSitter
-(unless (package-installed-p 'treesit-auto)
-  (package-install 'treesit-auto))
 
 ;; Get TreeSitter
 (require 'treesit)
@@ -80,15 +63,16 @@
      (c3 "https://github.com/c3lang/tree-sitter-c3")
      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
      (elvish "https://github.com/elves/tree-sitter-elvish")
+     (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/ocaml/src")
      (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
      (lua "https://github.com/tjdevries/tree-sitter-lua")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 ;;C3 mode
-(add-to-list 'load-path "/home/savvy/.emacs.d/c3-ts-mode")
-(require 'c3-ts-mode)
-(setq c3-ts-mode-indent-offset 2
-      treesit-font-lock-level 4)
+;; (add-to-list 'load-path "/home/savvy/.emacs.d/c3-ts-mode")
+;; (require 'c3-ts-mode)
+;; (setq c3-ts-mode-indent-offset 2
+;;       treesit-font-lock-level 4)
 
 (use-package treesit-auto
   :custom
@@ -96,15 +80,29 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+;; LSP-bridge
+(add-to-list 'load-path "~/.emacs.d/lsp-bridge")
+(add-to-list 'load-path "~/.emacs.d/acm-terminal")
+(require 'yasnippet)
+(yas-global-mode)
 
+(require 'lsp-bridge)
+(global-lsp-bridge-mode)
+(require 'popon)
+(with-eval-after-load 'acm
+  (require 'acm-terminal))
 ;; Eglot
-(require 'eglot)
-(use-package eglot
-  :ensure t)
-(add-hook 'rust-ts-mode-hook 'eglot-ensure)
+;; (require 'eglot)
+;; (use-package eglot
+;;   :ensure t)
+;; (add-hook 'rust-ts-mode-hook 'eglot-ensure)
+;; (add-hook 'zig-mode 'eglot-ensure)
+;; (add-hook 'c++-ts-mode 'eglot-ensure)
 
+;; Cmake-ide
+(cmake-ide-setup)
 ;; Get completion
-(add-hook 'after-init-hook 'global-company-mode)
+;;(add-hook 'after-init-hook 'global-company-mode)
 
 ;; Set proper caching
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
@@ -117,12 +115,23 @@
 ;;Personal mode changes
 (menu-bar-mode 0)
 (tool-bar-mode 0)
+(scroll-all-mode 1)
 (global-display-line-numbers-mode)
 (setq inhibit-startup-screen t)
-;(defun display-startup-echo-area-message ()
-;  (message nil)
-;  )
-;; Custom vars from plugins
+;; Disable startup message
+(defun display-startup-echo-area-message ()
+  (message nil)
+  )
+;; Compiling shortcuts
+(global-set-key (kbd "C-c c") 'compile)
+(global-set-key (kbd "C-c v") 'recompile)
+(global-set-key (kbd "C-c k") 'lsp-bridge-peek)
+
+;; Smooth Scrolling
+(setq scroll-step            1
+      scroll-conservatively  10000)
+;; Indentation mode
+(global-aggressive-indent-mode 1)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -131,12 +140,13 @@
  '(auth-source-save-behavior nil)
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(meson-mode company lua-mode haskell-mode kanagawa-themes dirvish elvish-mode org-modern evil)))
+   '(aggressive-indent harpoon ocaml-ts-mode gruber-darker-theme reason-mode caml popon yasnippet cmake-ide dash meow zig-mode meson-mode company lua-mode haskell-mode kanagawa-themes dirvish elvish-mode org-modern)))
 (custom-set-faces
- (set-face-background 'default "unspecified-bg")
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
+;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
+;;(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; ## end of OPAM user-setup addition for emacs / base ## keep this line

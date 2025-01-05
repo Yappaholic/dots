@@ -1,0 +1,19 @@
+theme = Kanagawa Dragon
+shell-integration = fish
+shell-integration-features = true
+focus-follows-mouse = true
+window-decoration = false
+confirm-close-surface = false
+background-opacity = 1
+window-padding-balance = true
+gtk-titlebar = true
+gtk-tabs-location = bottom
+gtk-wide-tabs = true
+bold-is-bright = true
+link-url = true
+
+keybind = ctrl+b>c=new_tab
+keybind = ctrl+b>n=next_tab
+keybind = ctrl+b>p=previous_tab
+keybind = ctrl+b>r=reload_config
+keybind = ctrl+b>x=close_surface
